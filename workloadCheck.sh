@@ -17,7 +17,7 @@ do
    echo  "${BLUE}""total $resource : $total "
    deploy=$(kubectl get $resource -A --no-headers| awk '{split($3,a,"/")}a[1]!=a[2]')
 
-   if [(-n "${deploy}")]
+   if [[ -n "${deploy}" ]]
    then 
      echo  "${RED}""unhealthy $resource: \n${deploy}\n"
    else 
@@ -30,7 +30,7 @@ total=$(kubectl get daemonsets -A --no-headers| wc-l)
 unhealthy=$(kubectl get daemonsets -A --no-headers| awk '$3!=$5')
 
 echo "${BLUE}""total daemonsets: $total \n"
-if [( -n "${unhealthy}" )]
+if [[ -n "${unhealthy}" ]]
 then
    echo  "${RED}""unhealty daemonsets:\n${unhealthy}"
 else 
