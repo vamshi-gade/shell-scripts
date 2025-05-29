@@ -2,22 +2,24 @@
 
 # If the repository is private, you must have at least read permission for that repository 
 # your token must have the repo or admin:org scope.Otherwise, you will receive a 404 Not Found response status.
-REPO= repo_name
-ORG= org_name
-TEAM= team_name
+REPO=repo_name
+ORG=org_name
+TEAM=team_name
+USERNAME=$username
+TOKEN=$token
 
-function permissions {  
-    curl -s -u "${USERNAME}:${TOKEN}" https://api.github.com/orgs/$ORG/teams/$TEAM/repos/OWNER/$REPO 
-}
+  
+permissions="$(curl -L -u "${USERNAME}:${TOKEN}" https://api.github.com/orgs/$ORG/teams/$TEAM/repos/OWNER/$REPO)" 
 
 
-checkaccess= "$(permissions | jq -r '.[] | select(.permissions.pull == true) | .login')"
 
-if [[ -z "$checkaccess" ]]; then
+checkaccess= "$($permissions | jq -r '.[] | select(.permissions.pull == true) | .login')"
+
+if [[  "$checkaccess" ]]; then
     
-    echo "The Team has no permissions for ${REPO_NAME}."
+    echo "The Team has permissions for ${REPO_NAME}."
 
 else
-    echo "The Team has permissions for ${REPO_NAME}:"
-    echo "$collaborators"
+    echo "The Team has no permissions for ${REPO_NAME}:"
+    
 fi
